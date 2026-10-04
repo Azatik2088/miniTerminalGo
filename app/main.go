@@ -15,5 +15,5 @@ func main() {
 		fmt.Println("Ошибка: ", err)
 		return
 	}
-	fmt.Printf("%s command not found\n", command)
+	fmt.Printf("%s: command not found\n", command)
 }
