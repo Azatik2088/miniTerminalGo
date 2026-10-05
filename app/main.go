@@ -24,10 +24,9 @@ func main() {
 		case "exit":
 			return
 		case "echo":
-			result := strings.Join(parts[1:], " ")
-			fmt.Println(result)
+			fmt.Println(strings.Join(parts[1:], " "))
 		default:
-			fmt.Printf("%s: command not found\n", command)
+			fmt.Printf("%s: command not found\n", parts[0])
 		}
 	}
 }
