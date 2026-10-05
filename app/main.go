@@ -10,8 +10,8 @@ import (
 func main() {
 	reader := bufio.NewReader(os.Stdin)
 	for {
-		command, err := reader.ReadString('\n')
 		fmt.Print("$ ")
+		command, err := reader.ReadString('\n')
 		if err != nil {
 			os.Exit(0)
 		}
