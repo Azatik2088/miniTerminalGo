@@ -13,12 +13,14 @@ func main() {
 		fmt.Print("$ ")
 		command, err := reader.ReadString('\n')
 		if err != nil {
-			os.Exit(0)
+			return
 		}
 		command = strings.TrimSpace(command)
-		if command == "exit" {
-			os.Exit(0)
+		switch command {
+		case "exit":
+			return
+		default:
+			fmt.Printf("%s: command not found\n", command)
 		}
-		fmt.Printf("%s: command not found\n", command)
 	}
 }
