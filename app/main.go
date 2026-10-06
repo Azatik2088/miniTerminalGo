@@ -28,6 +28,10 @@ func main() {
 		case "echo":
 			fmt.Println(strings.Join(parts[1:], " "))
 		case "type":
+			if len(parts) < 2 {
+				break
+			}
+
 			if slices.Contains(shellCommands, parts[1]) {
 				fmt.Printf("%s is a shell builtin\n", parts[1])
 			} else {
