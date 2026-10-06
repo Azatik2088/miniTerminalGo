@@ -11,7 +11,7 @@ import (
 
 func main() {
 	reader := bufio.NewReader(os.Stdin)
-	shellCommands := []string{"exit", "echo", "type", "pwd"}
+	shellCommands := []string{"exit", "echo", "type", "pwd", "cd"}
 	for {
 		fmt.Print("$ ")
 		command, err := reader.ReadString('\n')
@@ -47,6 +47,11 @@ func main() {
 				break
 			}
 			fmt.Println(dir)
+		case "cd":
+			err = os.Chdir(parts[1])
+			if err != nil {
+				fmt.Printf("cd: %s: No such file or directory", parts[1])
+			}
 		default:
 			if _, err := exec.LookPath(parts[0]); err != nil {
 				fmt.Printf("%s: command not found\n", parts[0])
