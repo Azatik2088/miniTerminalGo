@@ -48,9 +48,15 @@ func main() {
 			}
 			fmt.Println(dir)
 		case "cd":
-			err = os.Chdir(parts[1])
-			if err != nil {
-				fmt.Printf("cd: %s: No such file or directory\n", parts[1])
+			var targetDir string
+			if len(parts) < 2 {
+				targetDir = os.Getenv("HOME")
+			} else {
+				targetDir = parts[1]
+			}
+
+			if err := os.Chdir(targetDir); err != nil {
+				fmt.Printf("cd: %s: No such file or directory\n", targetDir)
 			}
 		default:
 			if _, err := exec.LookPath(parts[0]); err != nil {
