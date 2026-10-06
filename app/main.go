@@ -40,9 +40,15 @@ func main() {
 			} else {
 				fmt.Printf("%s: not found\n", parts[1])
 			}
-
 		default:
-			fmt.Printf("%s: command not found\n", parts[0])
+			if _, err := exec.LookPath(parts[0]); err != nil {
+				fmt.Printf("%s: command not found\n", parts[0])
+			} else {
+				cmd := exec.Command(parts[0], parts[1:]...)
+				cmd.Stdout = os.Stdout
+				cmd.Stderr = os.Stderr
+				cmd.Run()
+			}
 		}
 	}
 }
