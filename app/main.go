@@ -50,7 +50,7 @@ func main() {
 		case "cd":
 			err = os.Chdir(parts[1])
 			if err != nil {
-				fmt.Printf("cd: %s: No such file or directory", parts[1])
+				fmt.Printf("cd: %s: No such file or directory\n", parts[1])
 			}
 		default:
 			if _, err := exec.LookPath(parts[0]); err != nil {
