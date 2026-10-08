@@ -11,7 +11,8 @@ import (
 
 func main() {
 	reader := bufio.NewReader(os.Stdin)
-	shellCommands := []string{"exit", "echo", "type", "pwd", "cd"}
+	shellCommands := []string{"exit", "echo", "type", "pwd", "cd", "history"}
+	var history []string
 	for {
 		fmt.Print("$ ")
 		command, err := reader.ReadString('\n')
@@ -23,6 +24,7 @@ func main() {
 		if len(parts) == 0 {
 			continue
 		}
+		history = append(history, command)
 		switch parts[0] {
 		case "exit":
 			return
@@ -58,6 +60,28 @@ func main() {
 			if err := os.Chdir(targetDir); err != nil {
 				fmt.Printf("cd: %s: No such file or directory\n", targetDir)
 			}
+		case "history":
+			if len(parts) > 2 && parts[1] == "-r" {
+				file, err := os.Open(parts[2])
+				if err != nil {
+					return
+				}
+				defer file.Close()
+
+				readHistory := bufio.NewScanner(file)
+				for readHistory.Scan() {
+					line := readHistory.Text()
+					if strings.TrimSpace(line) != "" {
+						history = append(history, line)
+					}
+				}
+
+			} else {
+				for index, command := range history {
+					fmt.Printf("%5d %s\n", index+1, command)
+				}
+			}
+
 		default:
 			if _, err := exec.LookPath(parts[0]); err != nil {
 				fmt.Printf("%s: command not found\n", parts[0])
