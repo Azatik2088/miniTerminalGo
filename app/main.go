@@ -49,7 +49,7 @@ func main() {
 			fmt.Println(dir)
 		case "cd":
 			var targetDir string
-			if len(parts) < 2 {
+			if len(parts) < 2 || parts[1] == "~" {
 				targetDir = os.Getenv("HOME")
 			} else {
 				targetDir = parts[1]
