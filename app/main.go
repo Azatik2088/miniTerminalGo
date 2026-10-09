@@ -62,26 +62,40 @@ func main() {
 			}
 		case "history":
 			if len(parts) > 2 && parts[1] == "-r" {
+				if len(parts) < 3 {
+					fmt.Println("history: -r: option requires an argument")
+					break
+				}
 				file, err := os.Open(parts[2])
 				if err != nil {
-					return
+					break
 				}
-				defer file.Close()
-
 				readHistory := bufio.NewScanner(file)
+
 				for readHistory.Scan() {
 					line := readHistory.Text()
 					if strings.TrimSpace(line) != "" {
 						history = append(history, line)
 					}
 				}
+				if err := readHistory.Err(); err != nil {
+					fmt.Println("Error reading history file: ", err)
+				}
+				file.Close()
 
+			} else if len(parts) > 2 && parts[1] == "-w" {
+				filePath := parts[2]
+				content := strings.Join(history, "\n") + "\n"
+				err := os.WriteFile(filePath, []byte(content), 0644)
+				if err != nil {
+					fmt.Println("Error: ", err)
+					break
+				}
 			} else {
 				for index, command := range history {
 					fmt.Printf("%5d %s\n", index+1, command)
 				}
 			}
-
 		default:
 			if _, err := exec.LookPath(parts[0]); err != nil {
 				fmt.Printf("%s: command not found\n", parts[0])
