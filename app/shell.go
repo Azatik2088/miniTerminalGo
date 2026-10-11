@@ -11,8 +11,9 @@ import (
 type CommandHandler func(s *Shell, args []string)
 
 type Shell struct {
-	history  []string
-	builtins map[string]CommandHandler
+	history      []string
+	builtins     map[string]CommandHandler
+	lastAppended int
 }
 
 func NewShell() *Shell {
@@ -26,6 +27,7 @@ func NewShell() *Shell {
 			"type":    handleType,
 			"history": handleHistory,
 		},
+		lastAppended: 0,
 	}
 }
 

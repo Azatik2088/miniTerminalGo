@@ -70,6 +70,12 @@ func handleHistory(s *Shell, args []string) {
 			return
 		}
 		writeHistoryFile(s, args[1])
+	case "-a":
+		if len(args) < 2 {
+			fmt.Println("history: -a: option requires an argument")
+			return
+		}
+		appendHistoryFile(s, args[1])
 	}
 }
 
@@ -107,4 +113,21 @@ func writeHistoryFile(s *Shell, filePath string) {
 		fmt.Println("Error: ", err)
 		return
 	}
+}
+
+func appendHistoryFile(s *Shell, filePath string) {
+	newCommands := s.history[s.lastAppended:]
+	file, err := os.OpenFile(filePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		fmt.Println("Error: ", err)
+		return
+	}
+	defer file.Close()
+
+	content := strings.Join(newCommands, "\n") + "\n"
+	if _, err := file.WriteString(content); err != nil {
+		fmt.Println("Error: ", err)
+		return
+	}
+	s.lastAppended = len(s.history)
 }
