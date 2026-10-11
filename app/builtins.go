@@ -88,9 +88,9 @@ func printHistory(s *Shell) {
 func readHistoryFile(s *Shell, filePath string) {
 	file, err := os.Open(filePath)
 	if err != nil {
-		fmt.Println("Error: can't open this file")
 		return
 	}
+	defer file.Close()
 	readHistory := bufio.NewScanner(file)
 
 	for readHistory.Scan() {
@@ -103,7 +103,7 @@ func readHistoryFile(s *Shell, filePath string) {
 		fmt.Println("Error reading history file: ", err)
 		return
 	}
-	file.Close()
+
 }
 
 func writeHistoryFile(s *Shell, filePath string) {

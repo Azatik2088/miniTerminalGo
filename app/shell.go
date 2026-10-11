@@ -14,10 +14,11 @@ type Shell struct {
 	history      []string
 	builtins     map[string]CommandHandler
 	lastAppended int
+	historyFile  string
 }
 
 func NewShell() *Shell {
-	return &Shell{
+	s := &Shell{
 		history: make([]string, 0),
 		builtins: map[string]CommandHandler{
 			"exit":    handleExit,
@@ -28,7 +29,13 @@ func NewShell() *Shell {
 			"history": handleHistory,
 		},
 		lastAppended: 0,
+		historyFile:  os.Getenv("HISTFILE"),
 	}
+	if s.historyFile != "" {
+		readHistoryFile(s, s.historyFile)
+		s.lastAppended = len(s.history)
+	}
+	return s
 }
 
 func (s *Shell) handlerExternal(cmd string, args []string) {
