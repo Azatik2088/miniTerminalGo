@@ -9,7 +9,9 @@ import (
 )
 
 func handleExit(s *Shell, args []string) {
-	writeHistoryFile(s, s.historyFile)
+	if s.historyFile != "" {
+		writeHistoryFile(s, s.historyFile)
+	}
 	os.Exit(0)
 }
 
