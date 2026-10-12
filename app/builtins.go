@@ -8,8 +8,9 @@ import (
 	"strings"
 )
 
-func handleExit(_ *Shell, args []string) {
+func handleExit(s *Shell, args []string) {
 	os.Exit(0)
+	writeHistoryFile(s, s.historyFile)
 }
 
 func handleEcho(_ *Shell, args []string) {
