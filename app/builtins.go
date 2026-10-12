@@ -9,8 +9,8 @@ import (
 )
 
 func handleExit(s *Shell, args []string) {
-	os.Exit(0)
 	writeHistoryFile(s, s.historyFile)
+	os.Exit(0)
 }
 
 func handleEcho(_ *Shell, args []string) {
