@@ -58,7 +58,7 @@ func (s *Shell) Run() {
 			return
 		}
 		command = strings.TrimSpace(command)
-		parts := strings.Fields(command)
+		parts := parseCommand(command)
 		if len(parts) == 0 {
 			continue
 		}
@@ -72,4 +72,28 @@ func (s *Shell) Run() {
 			s.handlerExternal(commandName, args)
 		}
 	}
+}
+
+func parseCommand(command string) []string {
+	parsedCommands := []string{}
+	parseCommand := ""
+	isQuotes := false
+	for _, ch := range command {
+		if ch == '\'' {
+			isQuotes = !isQuotes
+			continue
+		}
+		if !isQuotes && string(ch) == " " {
+			if parseCommand != "" {
+				parsedCommands = append(parsedCommands, parseCommand)
+				parseCommand = ""
+			}
+		} else {
+			parseCommand += string(ch)
+		}
+	}
+	if parseCommand != "" {
+		parsedCommands = append(parsedCommands, parseCommand)
+	}
+	return parsedCommands
 }
