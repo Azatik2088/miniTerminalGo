@@ -75,25 +75,28 @@ func (s *Shell) Run() {
 }
 
 func parseCommand(command string) []string {
-	parsedCommands := []string{}
-	parseCommand := ""
-	isQuotes := false
+	result := []string{}
+	var currentWord strings.Builder
+	isSingleQuotes := false
+	isDoubleQuotes := false
 	for _, ch := range command {
-		if ch == '\'' {
-			isQuotes = !isQuotes
+		if ch == '\'' && !isDoubleQuotes {
+			isSingleQuotes = !isSingleQuotes
 			continue
-		}
-		if !isQuotes && string(ch) == " " {
-			if parseCommand != "" {
-				parsedCommands = append(parsedCommands, parseCommand)
-				parseCommand = ""
+		} else if ch == '"' && !isSingleQuotes {
+			isDoubleQuotes = !isDoubleQuotes
+			continue
+		} else if !isSingleQuotes && !isDoubleQuotes && ch == ' ' {
+			if currentWord.Len() > 0 {
+				result = append(result, currentWord.String())
+				currentWord.Reset()
 			}
 		} else {
-			parseCommand += string(ch)
+			currentWord.WriteRune(ch)
 		}
 	}
-	if parseCommand != "" {
-		parsedCommands = append(parsedCommands, parseCommand)
+	if currentWord.Len() > 0 {
+		result = append(result, currentWord.String())
 	}
-	return parsedCommands
+	return result
 }
