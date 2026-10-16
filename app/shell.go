@@ -81,15 +81,20 @@ func parseCommand(command string) []string {
 	isSingleQuotes := false
 	isDoubleQuotes := false
 	for _, ch := range command {
-		if ch == '\\' {
-			isBackSlash = true
-			continue
-		}
+		// если у нас был символ обратного слеша до этого
+		// то мы текущий символ записываем в слово
+		// и идем к следующему символу
 		if isBackSlash {
 			currentWord.WriteRune(ch)
 			isBackSlash = false
 			continue
 		}
+
+		if ch == '\\' {
+			isBackSlash = true
+			continue
+		}
+
 		if ch == '\'' && !isDoubleQuotes {
 			isSingleQuotes = !isSingleQuotes
 			continue
