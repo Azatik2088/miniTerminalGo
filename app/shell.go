@@ -77,9 +77,19 @@ func (s *Shell) Run() {
 func parseCommand(command string) []string {
 	result := []string{}
 	var currentWord strings.Builder
+	isBackSlash := false
 	isSingleQuotes := false
 	isDoubleQuotes := false
 	for _, ch := range command {
+		if ch == '\\' {
+			isBackSlash = true
+			continue
+		}
+		if isBackSlash {
+			currentWord.WriteRune(ch)
+			isBackSlash = false
+			continue
+		}
 		if ch == '\'' && !isDoubleQuotes {
 			isSingleQuotes = !isSingleQuotes
 			continue
