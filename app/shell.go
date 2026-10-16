@@ -90,7 +90,7 @@ func parseCommand(command string) []string {
 			continue
 		}
 
-		if ch == '\\' {
+		if ch == '\\' && !isSingleQuotes {
 			isBackSlash = true
 			continue
 		}
