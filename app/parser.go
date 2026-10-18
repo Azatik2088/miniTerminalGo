@@ -32,9 +32,11 @@ func parseCommand(command string) []string {
 		} else if ch == '"' && !isSingleQuotes {
 			isDoubleQuotes = !isDoubleQuotes
 			continue
-		} else if !isSingleQuotes && !isDoubleQuotes && ch == ' ' && currentWord.Len() > 0 {
-			result = append(result, currentWord.String())
-			currentWord.Reset()
+		} else if !isSingleQuotes && !isDoubleQuotes && ch == ' ' {
+			if currentWord.Len() > 0 {
+				result = append(result, currentWord.String())
+				currentWord.Reset()
+			}
 		} else {
 			currentWord.WriteRune(ch)
 		}
