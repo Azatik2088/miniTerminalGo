@@ -62,6 +62,21 @@ func (s *Shell) Run() {
 		if len(parts) == 0 {
 			continue
 		}
+
+		//проверка на наличие перенаправления вывода
+		terminal := os.Stdout
+		var file *os.File
+		parts, outputFile := findRedirection(parts)
+		if outputFile != "" {
+			var err error
+			file, err = os.Create(outputFile)
+			if err != nil {
+				fmt.Println(err)
+				continue
+			}
+			os.Stdout = file
+		}
+
 		s.history = append(s.history, command)
 		commandName := parts[0]
 		args := parts[1:]
@@ -71,5 +86,23 @@ func (s *Shell) Run() {
 		} else {
 			s.handlerExternal(commandName, args)
 		}
+		if file != nil {
+			file.Close()
+			os.Stdout = terminal
+		}
 	}
+}
+
+func findRedirection(parts []string) (cleanParts []string, outputFile string) {
+	cleanParts = parts
+	for index := range parts {
+		if parts[index] == ">" || parts[index] == "1>" {
+			cleanParts = parts[:index]
+			if index+1 < len(parts) {
+				outputFile = parts[index+1]
+			}
+			break
+		}
+	}
+	return
 }
