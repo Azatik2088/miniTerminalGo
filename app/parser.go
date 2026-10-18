@@ -7,6 +7,7 @@ import (
 func parseCommand(command string) []string {
 	result := []string{}
 	var currentWord strings.Builder
+
 	isBackSlash := false
 	isSingleQuotes := false
 	isDoubleQuotes := false
@@ -31,15 +32,14 @@ func parseCommand(command string) []string {
 		} else if ch == '"' && !isSingleQuotes {
 			isDoubleQuotes = !isDoubleQuotes
 			continue
-		} else if !isSingleQuotes && !isDoubleQuotes && ch == ' ' {
-			if currentWord.Len() > 0 {
-				result = append(result, currentWord.String())
-				currentWord.Reset()
-			}
+		} else if !isSingleQuotes && !isDoubleQuotes && ch == ' ' && currentWord.Len() > 0 {
+			result = append(result, currentWord.String())
+			currentWord.Reset()
 		} else {
 			currentWord.WriteRune(ch)
 		}
 	}
+	// добавление последнего слова в результирующий слайс
 	if currentWord.Len() > 0 {
 		result = append(result, currentWord.String())
 	}
